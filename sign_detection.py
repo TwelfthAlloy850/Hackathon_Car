@@ -35,8 +35,10 @@ def id_class_name(class_id, classes):
 
 
 # Loading model
-model = cv2.dnn.readNetFromTensorflow('models/frozen_inference_graph.pb',
-                                      'models/ssd_mobilenet_v2_coco_2018_03_29.pbtxt')
+#please download these files from here: https://github.com/rdeepc/ExploreOpencvDnn/tree/master/models
+#the program will not work without them
+model = cv2.dnn.readNetFromTensorflow('frozen_inference_graph.pb',
+                                      'ssd_mobilenet_v2_coco_2018_03_29.pbtxt')
 #PiCamera setup
 camera = PiCamera()
 camera.rotation = 180
