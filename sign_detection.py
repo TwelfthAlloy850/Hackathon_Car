@@ -44,6 +44,8 @@ camera = PiCamera()
 camera.rotation = 180
 
 while running:
+    #Use PiCamera to take a picture for analysis and loop this when done analyzing
+    #if not using PiCamera, can change directory 
     camera.capture("/home/pi/Desktop/analyze.jpg")
     image = cv2.imread("/home/pi/Desktop/analyze.jpg")
 
@@ -52,12 +54,14 @@ while running:
     model.setInput(cv2.dnn.blobFromImage(image, size=(300, 300), swapRB=True))
     output = model.forward()
 
+    #determine type of object
     for detection in output[0, 0, :, :]:
         confidence = detection[2]
         if confidence > .5:
             class_id = detection[1]
             class_name=id_class_name(class_id,classNames)
             print(str(str(class_id) + " " + str(detection[2])  + " " + class_name))
+            #if you want to see a visual example of the objects detected, uncomment the following code (and lines 80 and 83-4):
             '''box_x = detection[3] * image_width
             box_y = detection[4] * image_height
             box_width = detection[5] * image_width
@@ -65,7 +69,7 @@ while running:
             cv2.rectangle(image, (int(box_x), int(box_y)), (int(box_width), int(box_height)), (23, 230, 210), thickness=1)
             cv2.putText(image,class_name ,(int(box_x), int(box_y+.05*image_height)),cv2.FONT_HERSHEY_SIMPLEX,(.005*image_width),(0, 0, 255))
             '''
-
+    #if this is a stop sign, stop for 3 seconds, then resume
     if class_name=="stop sign":
         print("this is a stop sign")
         e.ChangeDutyCycle(7.5)
